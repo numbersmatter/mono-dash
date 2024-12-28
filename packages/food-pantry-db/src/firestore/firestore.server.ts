@@ -1,5 +1,5 @@
 import { getApps, initializeApp as initializeServerApp, cert as serverCert } from "firebase-admin/app"
-import { getFirestore } from "firebase-admin/firestore"
+
 
 export const initFirebase = ({
 	FIREBASE_APP_NAME,
