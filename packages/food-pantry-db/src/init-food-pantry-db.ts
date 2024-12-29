@@ -54,4 +54,4 @@ export const initializeFirestoreFoodPantryDb = ({
 	}
 }
 
-export { EventType, EventStage }
+export type { EventType, EventStage }

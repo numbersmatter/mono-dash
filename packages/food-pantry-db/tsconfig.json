@@ -7,7 +7,7 @@
 		},
 		"typeRoots": ["./node_modules/@types"],
 		"forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
-		"types": ["vitest/globals"],
+		"types": [],
 		"outDir": "./dist",
 		"declaration": true,
 		"declarationMap": true,

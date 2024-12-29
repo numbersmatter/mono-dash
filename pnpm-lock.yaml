@@ -65,6 +65,9 @@ importers:
 
   apps/staff-app:
     dependencies:
+      '@mono-dash/food-pantry-db':
+        specifier: workspace:*
+        version: link:../../packages/food-pantry-db
       '@react-router/node':
         specifier: ^7.1.1
         version: 7.1.1(react-router@7.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(typescript@5.7.2)

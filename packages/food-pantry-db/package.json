@@ -1,6 +1,7 @@
 {
 	"name": "@mono-dash/food-pantry-db",
 	"version": "0.0.1",
+	"type": "module",
 	"description": "Food Pantry Database for nonprofits",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
