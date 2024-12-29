@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "incremental": true,
+     "rootDirs": [".", "./.react-router/types"],
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "jsx": "react-jsx",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
@@ -11,5 +12,11 @@
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "include": ["app"]
+   "include": [
+    "app",
+    "**/*",
+    "**/.server/**/*",
+    "**/.client/**/*",
+    ".react-router/types/**/*"
+  ]
 }

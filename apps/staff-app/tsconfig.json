@@ -1,13 +1,23 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-       "paths": {
+    "types": ["node", "vite/client"],
+    "incremental": true,
+     "rootDirs": [".", "./.react-router/types"],
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "jsx": "react-jsx",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "paths": {
       "~/staff/*": ["./app/*"]
     },
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   },
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
-  "files": []
+   "include": [
+    "app",
+    "**/*",
+    "**/.server/**/*",
+    "**/.client/**/*",
+    ".react-router/types/**/*"
+  ]
 }
-

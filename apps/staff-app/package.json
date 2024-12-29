@@ -6,16 +6,18 @@
     "build": "cross-env NODE_ENV=production react-router build",
     "dev": "react-router dev",
     "start": "cross-env NODE_ENV=production react-router-serve ./build/server/index.js",
+    "reveal": "react-router reveal",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@mono-dash/food-pantry-db": "workspace:*",
     "@react-router/node": "^7.1.1",
     "@react-router/serve": "^7.1.1",
     "isbot": "^5.1.17",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router": "^7.1.1",
-    "@mono-dash/food-pantry-db": "workspace:*"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@react-router/dev": "^7.1.1",
