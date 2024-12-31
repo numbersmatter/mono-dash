@@ -1,4 +1,4 @@
-import { Form, Link, Outlet } from "react-router"
+import { Form, Link, Outlet, useLoaderData } from "react-router"
 import { Button } from "~/staff/components/ui/button"
 import {
   Sidebar,
@@ -15,6 +15,8 @@ import {
 } from "~/components/ui/sidebar"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar';
 import { Separator } from "~/staff/components/ui/separator";
+import { Route } from "./+types/main-layout";
+
 
 // This is sample data.
 const data = {
@@ -47,6 +49,16 @@ const data = {
   ],
 }
 
+
+export async function loader({ }: Route.LoaderArgs) {
+  const logOutPath = "/logout"
+
+  return { logOutPath }
+}
+
+
+
+
 export default function MainLayout() {
   return (
     <>
@@ -73,6 +85,15 @@ function PageHeader() {
       </h3>
       <Separator orientation="vertical" className="mr-2 h-4" />
     </header>
+  )
+}
+
+function LogOutButton() {
+  const { logOutPath } = useLoaderData();
+  return (
+    <Form method="POST" action={logOutPath}>
+      <Button variant={"destructive"} type="submit">Sign Out</Button>
+    </Form>
   )
 }
 
@@ -106,10 +127,7 @@ function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarRail />
       <SidebarFooter>
-        <Form method="POST" action="/sign-out">
-          <Button variant={"destructive"} type="submit">Sign Out</Button>
-
-        </Form>
+        <LogOutButton />
       </SidebarFooter>
     </Sidebar>
   )

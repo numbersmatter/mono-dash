@@ -5,5 +5,6 @@ export default [
     index("routes/home.tsx"),
     route("events","routes/events.tsx" )
   ]),
-  route("login", "routes/login.tsx")
+  route("login", "routes/login/login.tsx"),
+  route("logout", "routes/logout.ts")
 ] satisfies RouteConfig;

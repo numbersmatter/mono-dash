@@ -197,4 +197,9 @@ const signInWithToken = async (idToken: string) => {
   return sessionCookie;
 };
 
-export { signInWithEmailAndPassword, signInWithToken}
+export { 
+  signInWithEmailAndPassword, 
+  signInWithToken, 
+  getFirebaseUser, 
+  checkSessionCookie
+}

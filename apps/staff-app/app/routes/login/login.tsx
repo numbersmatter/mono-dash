@@ -2,16 +2,28 @@
 import { data, Link, redirect } from "react-router";
 import { useForm } from "@conform-to/react";
 import { Input } from "~/components/ui/input";
-import { Route } from "./+types/login";
-import { commitSession, getSession } from "../services/sessions.server";
-import { signInWithEmailAndPassword, signInWithToken } from "../services/firebase-auth.server";
+import { commitSession, getSession } from "../../services/sessions.server";
+import { signInWithEmailAndPassword, signInWithToken } from "../../services/firebase-auth.server";
 import { parseWithZod } from "@conform-to/zod";
 import { z } from "zod";
+import { Route } from "./+types/login";
+import { attemptSignIn } from "./mutations.server";
+import { checkAuth } from "~/staff/services/auth-funcs.server";
+import { it } from "node:test";
 /*
 
 */
 
 
+export async function loader({ request }: Route.LoaderArgs) {
+  const { authenticated } = await checkAuth({ request });
+
+  if (authenticated) {
+    return redirect("/");
+  }
+
+  return {};
+}
 
 
 
@@ -20,53 +32,10 @@ import { z } from "zod";
 export async function action({
   request,
 }: Route.ActionArgs) {
-  // const session = await getSession(
-  //   request.headers.get("Cookie")
-  // );
-
+  const cookie = request.headers.get("cookie")
   const formData = await request.formData();
-  const submission = await parseWithZod(formData, {
-    schema: z.object({
-      email: z.string().email(),
-      password: z.string().min(6)
-    })
-  })
 
-  if (submission.status !== "success") {
-    return submission.reply()
-  }
-
-  let sessionCookie;
-
-  const { email, password } = submission.value;
-
-  try {
-    const { idToken } = await signInWithEmailAndPassword({
-      email,
-      password
-    });
-    sessionCookie = await signInWithToken(idToken);
-
-    const cookie = request.headers.get("cookie")
-
-    const session = await getSession(cookie);
-    session.set("session", sessionCookie);
-
-    return redirect("/", {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    });
-  } catch (error) {
-    return data({ error: String(error) }, { status: 401 });
-  }
-
-
-
-
-
-
-
+  return await attemptSignIn({ cookie, formData });
 }
 
 

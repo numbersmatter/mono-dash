@@ -2,8 +2,10 @@ import { Car, ChevronRightIcon, PackageOpenIcon } from "lucide-react";
 import { Route } from "./+types/events";
 import { Link } from "react-router";
 import { getEvents } from "./data/events.server";
+import { requireAuth } from "../services/auth-funcs.server";
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({ params, request }: Route.LoaderArgs) {
+  await requireAuth({ request });
   const pageData = await getEvents();
 
   return { ...pageData };
