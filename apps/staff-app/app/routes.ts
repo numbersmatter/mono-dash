@@ -5,8 +5,13 @@ export default [
     index("routes/home.tsx"),
     ...prefix("events", [
       index("routes/events.tsx"),
-      route(":eventId", "routes/events/eventIdRoute.tsx", [
-        index("routes/events/eventIdIndex.tsx")
+      route("create", "routes/events/create-event.tsx"),
+      route(":eventId", "routes/events/eventHeader.tsx", [
+        index("routes/events/eventIdIndex.tsx"),
+        route("edit", "routes/events/eventEdit.tsx"),
+        ...prefix("pickup",[
+          index("routes/events/pickupList.tsx")
+        ])
       ]),
 
     ]),    

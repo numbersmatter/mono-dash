@@ -1,14 +1,42 @@
 import { useLoaderData } from "react-router";
 import { Route } from "./+types/eventIdIndex";
-import { ChartSignup } from "./chart-signup";
+import { ChartSignup, RequestApprovals } from "./chart-signup";
+import { ChartConfig } from "~/staff/components/ui/chart";
+import { TestChart } from "./test-chart";
+import { getEventStats } from "../data/events.server";
 
 export async function loader({ params }: Route.LoaderArgs) {
+
+  const eventIndexData = await getEventStats({ eventId: params.eventId })
+
+  const chartConfig = {
+    requests: {
+      label: "Requests",
+      color: "hsl(var(--chart-1))",
+    },
+    approvals: {
+      label: "Approvals",
+      color: "hsl(var(--chart-2))",
+    },
+  } satisfies ChartConfig
+
+  const chartData = [
+    { requests: 200, fill: "var(--color-requests)" },
+    { approvals: 100, fill: "var(--color-approvals)" },
+  ]
+
+  const { stats } = eventIndexData
+
   return {
-    stats: [
-      { name: 'Events', stat: '10' },
-      { name: 'Applications', stat: '20' },
-      { name: 'Users', stat: '30' },
-    ]
+    ...eventIndexData,
+    cardData: {
+      title: "Percent Pickup",
+      descript: "example description",
+      footerTitle: "Total",
+      footerDescript: "example description",
+    },
+    chartConfig,
+    chartData,
   }
 }
 
@@ -16,20 +44,23 @@ export async function loader({ params }: Route.LoaderArgs) {
 export default function EventIdIndex({ loaderData }: Route.ComponentProps) {
 
   return (
-    <div>
-      <h1>Event Id Index</h1>
-      <ReportingCards />
-    </div>
+    <ReportingCards />
   )
 }
 
 
 function ReportingCards() {
-  const { stats } = useLoaderData<typeof loader>();
+  const {
+    stats,
+    requests,
+    approvedReservations,
+    reservationsDelivered,
+  } = useLoaderData<typeof loader>();
+
   return (
     <>
       <div className="px-4 py-2">
-        <h3 className="text-base font-semibold text-gray-900">Last 30 days</h3>
+        <h3 className="text-base font-semibold text-gray-900">Event Stats</h3>
         <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
           {stats.map((item) => (
             <div key={item.name} className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
@@ -39,7 +70,11 @@ function ReportingCards() {
           ))}
         </dl>
       </div>
-      <ChartSignup />
+      <TestChart
+        totalReservations={requests.length}
+        approvedReservations={approvedReservations.length}
+        reservationsDelivered={reservationsDelivered.length}
+      />
     </>
   )
 }

@@ -1,4 +1,5 @@
 import { foodPantryDb } from "~/staff/firestore/dbconnection";
+import { convertTo12Hour } from "~/staff/lib/utils";
 
 
 
@@ -34,4 +35,58 @@ const getEventData = async ({ eventId }: { eventId: string }) => {
   return { event: eventDoc, pickupTimes: timeSlotsArray, tabs };
 };
 
-export { getEventData};
+const getEventPickupList = async ({eventId}:{eventId:string}) => {
+  const reservationDocsAll = await foodPantryDb.reservations.listByEvent({eventId});
+
+  const approvedReservations= reservationDocsAll
+  .filter(r=> r.status == "approved")
+
+  const reservationsOrdered = approvedReservations
+  .sort((a,b)=> a.time - b.time)
+  .map( r => {
+    const timeSlot = convertTo12Hour(r.time)
+    const deliveryStatus = r.deliveryDetails?.status ?? "waiting"
+
+    return {
+      ...r,
+      timeSlot,
+      deliveryStatus,
+    }
+
+  })
+
+  const slots = new Set<number>();
+  const slotMap = new Map();
+
+  reservationsOrdered.map(r =>{
+    slots.add(r.time)
+  })
+
+  const slotArray =[...slots].map( s => {
+    const reservationsAtTime = reservationsOrdered
+    .filter(r=> r.time === s)
+
+    slotMap.set( s, reservationsAtTime)
+
+    return reservationsAtTime
+  })
+
+  const slotTimes = [...slots].sort((a,b)=> a-b)
+
+  return { reservations: reservationsOrdered, slotMap, slots:slotTimes };
+};
+
+
+const getActiveSemester = async ()=>{
+  const semesterId = "Dt6bULFo471k1b6HRsDl";
+  const semesterName = "August-December 2024"
+
+
+  return {
+    semesterId,
+    semesterName
+  }
+}
+
+
+export { getEventData, getEventPickupList, getActiveSemester};

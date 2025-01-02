@@ -9,7 +9,7 @@ import {
 import { cn } from '~/staff/lib/utils';
 import { requireAuth } from '~/staff/services/auth-funcs.server';
 import { getEventData } from './data-fetchers.server';
-import { Route } from './+types/eventIdRoute';
+import { Route } from './+types/eventHeader';
 
 // import { mutations } from './data/mutations.server';
 // import { getPageData } from './data/data-fetchers.server';
@@ -74,7 +74,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
         </div>
       </div>
 
-      <Outlet context={loaderData} />
+      <Outlet context={{ loaderData }} />
     </>
   )
 }
