@@ -36,14 +36,14 @@ const data = {
           title: "Events",
           url: "/events",
         },
-        {
-          title: "Applications",
-          url: "/applications",
-        },
-        {
-          title: "Users",
-          url: "/users",
-        }
+        // {
+        //   title: "Applications",
+        //   url: "/applications",
+        // },
+        // {
+        //   title: "Users",
+        //   url: "/users",
+        // }
       ],
     },
   ],
