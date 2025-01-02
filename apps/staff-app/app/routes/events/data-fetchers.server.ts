@@ -1,3 +1,4 @@
+import { data } from "react-router";
 import { foodPantryDb } from "~/staff/firestore/dbconnection";
 import { convertTo12Hour } from "~/staff/lib/utils";
 
@@ -76,6 +77,19 @@ const getEventPickupList = async ({eventId}:{eventId:string}) => {
   return { reservations: reservationsOrdered, slotMap, slots:slotTimes };
 };
 
+const getReservationProcessData = async({
+  reservationId
+}: {
+  reservationId: string
+})=>{
+  const reservation = await foodPantryDb.reservations.read(reservationId)
+  if(!reservation){
+    throw data("Reservation Not Found", { status: 404})
+  }
+  return { reservation };
+}
+
+
 
 const getActiveSemester = async ()=>{
   const semesterId = "Dt6bULFo471k1b6HRsDl";
@@ -89,4 +103,9 @@ const getActiveSemester = async ()=>{
 }
 
 
-export { getEventData, getEventPickupList, getActiveSemester};
+export { 
+  getEventData, 
+  getEventPickupList, 
+  getActiveSemester,
+  getReservationProcessData,
+};

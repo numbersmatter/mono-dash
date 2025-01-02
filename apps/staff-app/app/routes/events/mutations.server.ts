@@ -1,8 +1,9 @@
 import { parseWithZod } from "@conform-to/zod";
-import { redirect } from "react-router";
+import { data, redirect } from "react-router";
 import { AddPickupTime, ChangeStageSchema, CreateNewEventSchema, RemovePickupTime } from "./schemas";
 import { convertTo12Hour } from "~/lib/utils";
 import { foodPantryDb } from "~/staff/firestore/dbconnection";
+import { FieldValue } from "firebase-admin/firestore";
 
 const changeStage = async ({ formData }: { formData: FormData }) => {
   const submission = parseWithZod(formData, {
@@ -98,6 +99,38 @@ const makeEvent = async ({formData}:{formData: FormData})=>{
 }
 
 
+const confirmPickup = async ({
+  reservationId,
+  staffId,
+  eventId,
+}:{
+  reservationId :string,
+  staffId: string,
+  eventId: string,
+}) =>{
+    const reservation = await foodPantryDb.reservations.read(reservationId);
+  if(!reservation){
+    throw data("No reservation found", { status: 404})
+  }
+
+  const updateReservation = foodPantryDb.reservations.update
+
+  const updateData = {
+    deliveryTimestamp: FieldValue.serverTimestamp(),
+	  status: "delivered",
+	  staffId,
+  }
+
+  await updateReservation({
+    id: reservationId,
+    data: {
+      deliveryDetails: updateData
+    }
+  })
+
+  return redirect(`/events/${eventId}/pickup`)
+}
+
 
 
 export const mutations = { 
@@ -105,5 +138,6 @@ export const mutations = {
   addPickupTime, 
   removePickupTime,
   makeEvent, 
+  confirmPickup,
 };
 

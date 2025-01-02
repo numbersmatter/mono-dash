@@ -10,7 +10,8 @@ export default [
         index("routes/events/eventIdIndex.tsx"),
         route("edit", "routes/events/eventEdit.tsx"),
         ...prefix("pickup",[
-          index("routes/events/pickupList.tsx")
+          index("routes/events/pickupList.tsx"),
+          route(":reservationId", "routes/events/pickup-process.tsx"),
         ])
       ]),
 
